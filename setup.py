@@ -16,4 +16,5 @@ setup(
     package_data={
         'pyjector': ['projector_configs/*.json'],
     },
+    scripts=['pyjector_controller'],
 )
