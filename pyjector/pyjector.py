@@ -255,7 +255,28 @@ class Pyjector(object):
         response = self.get_response()
         logging.info("recv: " + repr(response))
         self._check_response(response)
+        self._handle_response(command_string, action, response)
         return response
+
+    def _handle_response(self, command, action, response):
+        """Check if `action` is a read command.
+
+        :param command: The command being requested
+        :param action: The action being requested
+        :param response: response from serial port
+
+        This method is used to isolate the logic for determining if a command
+        is a read or a write command. Read commands should output the response
+        from the serial port.
+
+        """
+        # so far, only status is defined as a read command
+        if 'status' in action:
+            # remove the command we already sent (sometimes the projector
+            # replies with the command sent)
+            response = response.replace(command, '').strip()
+            response = self._strip_response(response)
+            print response
 
     def _strip_response(self, response):
         rs = right_surround=self.config.get('right_surround', '')
